@@ -22,6 +22,7 @@ namespace CaseomaticMatchmakingClient
         }
         public MatchmakingPresence(MatchmakingSearchSettings _settings)
         {
+            playerId = Guid.NewGuid();
             personalSearchSettings = _settings;
         }
         public MatchmakingPresence()

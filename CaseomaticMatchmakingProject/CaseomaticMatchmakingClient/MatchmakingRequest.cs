@@ -41,7 +41,7 @@ namespace CaseomaticMatchmakingClient
     [Serializable]
     public enum MatchmakingRequestState
     {
-        QueueMe,
+        EnqueueMe,
         DequeueMe,
         HeartbeatAnswer
     }

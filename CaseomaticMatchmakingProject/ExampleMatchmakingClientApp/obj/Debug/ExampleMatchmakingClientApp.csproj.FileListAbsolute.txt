@@ -1,1 +1,9 @@
 C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\obj\Debug\ExampleMatchmakingClientApp.csprojResolveAssemblyReference.cache
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\obj\Debug\ExampleMatchmakingClientApp.csprojResolveAssemblyReference.cache
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\bin\Debug\ExampleMatchmakingClientApp.exe.config
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\bin\Debug\ExampleMatchmakingClientApp.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\bin\Debug\ExampleMatchmakingClientApp.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\bin\Debug\CaseomaticMatchmakingClient.dll
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\bin\Debug\CaseomaticMatchmakingClient.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\obj\Debug\ExampleMatchmakingClientApp.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\obj\Debug\ExampleMatchmakingClientApp.pdb

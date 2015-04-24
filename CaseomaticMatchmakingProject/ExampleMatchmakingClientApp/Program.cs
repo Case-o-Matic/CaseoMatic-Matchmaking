@@ -17,9 +17,16 @@ namespace ExampleMatchmakingClientApp
             enqueue:
             if (Console.ReadKey().Key == ConsoleKey.Enter)
             {
-                Console.WriteLine("Matchmaking-center port (int)> ");
-                int port;
-                if(!int.TryParse(Console.ReadLine(), out port))
+                Console.Write("Matchmaking-center port (int)> ");
+                int centerPort;
+                if(!int.TryParse(Console.ReadLine(), out centerPort))
+                {
+                    Console.WriteLine("Thats no integer!");
+                    goto enqueue;
+                }
+                Console.Write("Local port (int)> ");
+                int localPort;
+                if (!int.TryParse(Console.ReadLine(), out localPort))
                 {
                     Console.WriteLine("Thats no integer!");
                     goto enqueue;
@@ -33,13 +40,18 @@ namespace ExampleMatchmakingClientApp
                     goto enqueue;
                 }
 
-                MatchmakingManager.Start(new MatchmakingPresence(new MatchmakingSearchSettings(new List<MatchmakingSearchSettingsCondition>()
+                MatchmakingManager.Start(localPort, new MatchmakingPresence(new MatchmakingSearchSettings(new List<MatchmakingSearchSettingsCondition>()
                 {
                     new MatchmakingSearchSettingsCondition(deathmatch)
-                })), new IPEndPoint(IPAddress.Loopback, port));
-                MatchmakingManager.MatchFound += MatchmakingManager_MatchFound;
+                })), new IPEndPoint(IPAddress.Loopback, centerPort));
+                MatchmakingManager.OnMatchFound += MatchmakingManager_MatchFound;
 
                 MatchmakingManager.QueueMe();
+
+                while (Console.ReadKey().Key != ConsoleKey.Enter)
+                    Console.WriteLine();
+
+                MatchmakingManager.DequeueMe();
             }
             else goto enqueue;
         }
@@ -47,8 +59,8 @@ namespace ExampleMatchmakingClientApp
         private static void MatchmakingManager_MatchFound(MatchmakingFoundInfo info)
         {
             Console.WriteLine("You found a game!");
-            Console.WriteLine("Game-info:\nGame-server endpoint> " + info.gameServerEndPoint.ToString());
-            info.allUsers.ForEach((u) => { Console.WriteLine("User> " + u.playerId + ", " + u.externalEndPoint.ToString()); });
+            Console.WriteLine("Game-info:\nGame-server endpoint> " + info.gameServerEndPoint);
+            info.allUsers.ForEach((u) => { Console.WriteLine("User> " + u.playerId + ", " + u.externalEndPoint); });
         }
     }
 }

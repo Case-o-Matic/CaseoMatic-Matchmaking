@@ -11,10 +11,10 @@ namespace CaseomaticMatchmakingClient
 {
     public static class MatchmakingManager
     {
-        internal const int clientPort = 41001;
+        public const string version = "1.0.0-alpha";
 
         public delegate void MatchFoundHandler(MatchmakingFoundInfo info);
-        public static event MatchFoundHandler MatchFound;
+        public static event MatchFoundHandler OnMatchFound;
 
         public static MatchmakingPresence matchmakingPresence { get; private set; }
 
@@ -25,14 +25,14 @@ namespace CaseomaticMatchmakingClient
         private static bool isConnected;
         private static bool isCurrentlyQueueing;
 
-        public static void Start(MatchmakingPresence mmpresence, IPEndPoint matchmakingcenterendpoint)
+        public static void Start(int port, MatchmakingPresence mmpresence, IPEndPoint matchmakingcenterendpoint)
         {
             isConnected = true;
             matchmakingPresence = mmpresence;
 
             usedMatchmakingCenterEndPoint = matchmakingcenterendpoint;
-            localEndPoint = new IPEndPoint(IPAddress.Loopback, clientPort);
-            client = new UdpClient(usedMatchmakingCenterEndPoint);
+            localEndPoint = new IPEndPoint(IPAddress.Loopback, port);
+            client = new UdpClient(port, AddressFamily.InterNetwork);
 
             bgWorker = new BackgroundWorker();
             bgWorker.WorkerSupportsCancellation = true;
@@ -43,6 +43,7 @@ namespace CaseomaticMatchmakingClient
         {
             if (isConnected)
             {
+                bgWorker.CancelAsync();
                 client.Close();
             }
         }
@@ -51,7 +52,7 @@ namespace CaseomaticMatchmakingClient
         {
             if (!isCurrentlyQueueing)
             {
-                SendMessage(new MatchmakingRequest(matchmakingPresence, MatchmakingRequestState.QueueMe));
+                SendMessage(new MatchmakingRequest(matchmakingPresence, MatchmakingRequestState.EnqueueMe));
                 isCurrentlyQueueing = true;
             }
         }
@@ -67,7 +68,7 @@ namespace CaseomaticMatchmakingClient
         private static void SendMessage(MatchmakingRequest mmrequest)
         {
             byte[] mmrequestInBytes = MatchmakingRequest.SerializeToBytes(mmrequest);
-            client.Send(mmrequestInBytes, mmrequestInBytes.Length);
+            client.Send(mmrequestInBytes, mmrequestInBytes.Length, usedMatchmakingCenterEndPoint);
         }
 
         private static void DoReceiveMessageRoutine(object sender, DoWorkEventArgs e)
@@ -85,8 +86,9 @@ namespace CaseomaticMatchmakingClient
                     }
                     else if (answer.successState == MatchmakingSuccessState.MatchFound)
                     {
-                        if (MatchFound != null)
-                            MatchFound(new MatchmakingFoundInfo(answer.allUsers, answer.foundGameServer));
+                        if (OnMatchFound != null)
+                            OnMatchFound(new MatchmakingFoundInfo(answer.allUsers, answer.foundGameServer));
+                        isCurrentlyQueueing = false;
                     }
                 }
             }

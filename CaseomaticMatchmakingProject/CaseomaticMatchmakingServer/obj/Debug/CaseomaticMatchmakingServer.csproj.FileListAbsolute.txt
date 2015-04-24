@@ -6,3 +6,11 @@ C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\Caseom
 C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.csprojResolveAssemblyReference.cache
 C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.exe
 C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Debug\CaseomaticMatchmakingServer.exe.config
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Debug\CaseomaticMatchmakingServer.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Debug\CaseomaticMatchmakingServer.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Debug\CaseomaticMatchmakingClient.dll
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Debug\CaseomaticMatchmakingClient.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Debug\CaseomaticMatchmakingServer.csprojResolveAssemblyReference.cache

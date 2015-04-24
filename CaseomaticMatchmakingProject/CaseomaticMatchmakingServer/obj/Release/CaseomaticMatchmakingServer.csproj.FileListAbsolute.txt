@@ -1,0 +1,8 @@
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Release\CaseomaticMatchmakingServer.exe.config
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Release\CaseomaticMatchmakingServer.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Release\CaseomaticMatchmakingServer.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Release\CaseomaticMatchmakingClient.dll
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\bin\Release\CaseomaticMatchmakingClient.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Release\CaseomaticMatchmakingServer.csprojResolveAssemblyReference.cache
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Release\CaseomaticMatchmakingServer.exe
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingServer\obj\Release\CaseomaticMatchmakingServer.pdb

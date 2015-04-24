@@ -2,16 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CaseomaticMatchmakingServer
 {
     public sealed class MatchmakingCenter
     {
+        public const string version = "1.0.0-alpha";
         public const int maxNeededUserQueueLength = 450;
 
         public readonly IPEndPoint localEndPoint;
@@ -27,23 +30,24 @@ namespace CaseomaticMatchmakingServer
             }
         }
         private int _neededUserQueueLength;
+        public bool isOnline { get; private set; }
 
         private UdpClient client;
-        private BackgroundWorker bgWorker;
-        private bool isOnline;
+        private Thread receiveThread;
+        private List<string> log;
 
         internal Dictionary<MatchmakingSearchSettings, List<MatchmakingPresence>> currentSettingsAndUsers;
 
         public MatchmakingCenter(int port)
         {
-            localEndPoint = new IPEndPoint(IPAddress.Loopback, port);
+            localEndPoint = new IPEndPoint(IPAddress.Any, port);
             registeredGameServers = new List<GameServerMirror>();
             curentUsersSearchingAMatch = new List<MatchmakingPresence>();
             currentSettingsAndUsers = new Dictionary<MatchmakingSearchSettings, List<MatchmakingPresence>>();
+            log = new List<string>();
 
-            bgWorker = new BackgroundWorker();
-            bgWorker.WorkerSupportsCancellation = true;
-            bgWorker.DoWork += DoBackgroundReceiveRoutine;
+            receiveThread = new Thread(DoBackgroundReceiveRoutine);
+            receiveThread.IsBackground = true;
         }
 
         public void RegisterNewGameServer(GameServerMirror gameserverendpoint)
@@ -60,70 +64,89 @@ namespace CaseomaticMatchmakingServer
             else
                 WriteLog("Error; This game server is not in the registered list.");
         }
-        public bool CheckIsOnline()
-        {
-            return isOnline;
-        }
 
         public void Start()
         {
             isOnline = true;
             client = new UdpClient(localEndPoint.Port, AddressFamily.InterNetwork);
-            bgWorker.RunWorkerAsync();
+            receiveThread.Start();
 
             WriteLog("Started matchmaking center on " + localEndPoint.ToString() + ".");
         }
         public void Stop()
         {
+            // Dont stop the thread, aborting it is not good
+            // Instead, just let it run out by setting isOnline to false and closing the udp-client
+
             isOnline = false;
-            bgWorker.CancelAsync();
             client.Close();
 
             WriteLog("Closed matchmaking center");
+            SaveLog("mmserver.log");
         }
 
-        private void DoBackgroundReceiveRoutine(object sender, DoWorkEventArgs e)
+        private void DoBackgroundReceiveRoutine()
         {
-            while (isOnline)
+            try
             {
-                IPEndPoint sourceMessageSender = new IPEndPoint(IPAddress.Any, 0);
-                byte[] sourceMessage = client.Receive(ref sourceMessageSender);
-                // Maybe check here if the sender-port is from a valid matchmaking presence?
-
-                if (sourceMessageSender.Port == 41001)
+                while (isOnline)
                 {
-                    try
-                    {
-                        MatchmakingRequest mmRequest = MatchmakingRequest.DeserializeToMMRequest(sourceMessage);
-                        mmRequest.mmPresence.externalEndPoint = sourceMessageSender;
+                    IPEndPoint sourceMessageSender = new IPEndPoint(IPAddress.Any, 0);
+                    byte[] sourceMessage = client.Receive(ref sourceMessageSender);
+                    // Maybe check here if the sender-port is from a valid matchmaking presence?
 
-                        if (mmRequest.requestState == MatchmakingRequestState.QueueMe)
-                            QueueIntoMM(mmRequest.mmPresence);
-                        else if (mmRequest.requestState == MatchmakingRequestState.DequeueMe)
-                            DequeueFromMM(mmRequest.mmPresence);
-                        else if (mmRequest.requestState == MatchmakingRequestState.HeartbeatAnswer)
-                        { }
-                    }
-                    catch (Exception ex)
+                    #region Check for game server mirror
+                    GameServerMirror gsm = null;
+                    foreach (var gameservermirror in registeredGameServers)
                     {
-                        WriteLog("Error; " + ex.ToString());
-                    }
-                }
-                else if (sourceMessageSender.Port == 41002) // The port of game servers
-                {
-                    string msg = ASCIIEncoding.ASCII.GetString(sourceMessage);
-                    if (msg == "msg,ready")
-                    {
-                        foreach (var gameservermirror in registeredGameServers)
+                        if (gameservermirror.endPoint == sourceMessageSender)
                         {
-                            if (gameservermirror.endPoint == sourceMessageSender)
-                            {
-                                gameservermirror.isCurrentlyUsed = false;
-                                break;
-                            }
+                            gsm = gameservermirror;
+                        }
+                    }
+                    #endregion
+
+                    if (gsm != null) // The port of game servers
+                    {
+                        string msg = ASCIIEncoding.ASCII.GetString(sourceMessage);
+
+                        if (msg == "msg,unused")
+                        {
+                            gsm.isCurrentlyUsed = false;
+                        }
+                        else if (msg == "msg,used")
+                        {
+                            gsm.isCurrentlyUsed = true;
+                        }
+                        else
+                            WriteLog("The command \"" + msg + "\" is invalid.");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            MatchmakingRequest mmRequest = MatchmakingRequest.DeserializeToMMRequest(sourceMessage);
+                            mmRequest.mmPresence.externalEndPoint = sourceMessageSender;
+                            WriteLog("Received a client request from " + mmRequest.mmPresence.playerId + " (Endpoint: " + mmRequest.mmPresence.externalEndPoint.ToString() + ", Type: " + mmRequest.requestState.ToString() + ")");
+
+                            if (mmRequest.requestState == MatchmakingRequestState.EnqueueMe)
+                                QueueIntoMM(mmRequest.mmPresence);
+                            else if (mmRequest.requestState == MatchmakingRequestState.DequeueMe)
+                                DequeueFromMM(mmRequest.mmPresence);
+                            else if (mmRequest.requestState == MatchmakingRequestState.HeartbeatAnswer)
+                            { }
+                        }
+                        catch (Exception ex)
+                        {
+                            WriteLog("Error; " + ex.ToString());
                         }
                     }
                 }
+            }
+            catch(Exception ex)
+            {
+                if(!(ex is SocketException))
+                    WriteLog("Error; " + ex.ToString());
             }
         }
 
@@ -171,14 +194,17 @@ namespace CaseomaticMatchmakingServer
                     {
                         if (!gameservermirror.isCurrentlyUsed)
                         {
-                            gsm = gameservermirror;
-                            break;
+                            if (gameservermirror.GetPing() != -1)
+                            {
+                                gsm = gameservermirror;
+                                break;
+                            }
                         }
                     }
 
                     if (gsm == null)
                     {
-                        WriteLog("All registered game servers are currently in use. Requeueing users...");
+                        WriteLog("All registered game servers are currently in use. Requeuing users...");
                         return;
                     }
                     else
@@ -218,7 +244,17 @@ namespace CaseomaticMatchmakingServer
 
         private void WriteLog(string msg)
         {
-            Console.WriteLine(DateTime.Now.ToString() + ": " + msg);
+            string text = DateTime.Now.ToString() + ": " + msg;
+
+            Console.WriteLine();
+            Console.WriteLine(text);
+
+            log.Add(text);
+        }
+        private void SaveLog(string path)
+        {
+            log.Insert(0, "");
+            File.AppendAllLines(path, log.ToArray());
         }
     }
 }

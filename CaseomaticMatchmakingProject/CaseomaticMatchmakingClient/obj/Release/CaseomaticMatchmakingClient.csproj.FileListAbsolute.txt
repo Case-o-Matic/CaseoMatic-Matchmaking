@@ -1,0 +1,4 @@
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingClient\bin\Release\CaseomaticMatchmakingClient.dll
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingClient\bin\Release\CaseomaticMatchmakingClient.pdb
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingClient\obj\Release\CaseomaticMatchmakingClient.dll
+C:\Users\steelbloom\Desktop\Git\CaseoMatic-Matchmaking\CaseomaticMatchmakingProject\CaseomaticMatchmakingClient\obj\Release\CaseomaticMatchmakingClient.pdb
