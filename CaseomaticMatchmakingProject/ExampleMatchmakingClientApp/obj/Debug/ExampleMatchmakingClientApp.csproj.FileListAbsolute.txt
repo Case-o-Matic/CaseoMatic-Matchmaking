@@ -1,0 +1,1 @@
+C:\Users\steelbloom\Unity-Projekte\VS\Normal\CaseomaticMatchmakingProject\ExampleMatchmakingClientApp\obj\Debug\ExampleMatchmakingClientApp.csprojResolveAssemblyReference.cache
