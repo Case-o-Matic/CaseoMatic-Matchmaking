@@ -1,0 +1,27 @@
+Commands for the Case-o-Matic Matchmaking-Server (updated for version 1.0.0-alpha.2).
+How to write commands:
+commandName:Argument1,Argument2,...
+If the command has no arguments, write no ":".
+
+"add_gameserver"
+-ip : string
+-port : int
+Adds a game server to the matchmaking system thats responsible for created games.
+
+"remove_gameserver"
+-ip : string
+-port :  int
+Removes a game server wether or not its currently responsible for a game.
+
+"stop"
+Stops the server (you need to restart the executable to reboot the system).
+
+"print_currentqueues"
+Prints all current queues users are searched for.
+
+"print_registeredgameservers"
+Prints all currently registered game server responsible for accepting newly created games.
+
+"set_neededuserqueuelength"
+-length : int
+Sets the needed user queue length to create a new game (min: 1, max: 450)

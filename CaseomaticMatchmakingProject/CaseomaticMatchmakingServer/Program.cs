@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -9,12 +11,13 @@ namespace CaseomaticMatchmakingServer
 {
     class Program
     {
-        public const string version = "1.00";
         public static MatchmakingCenter mmCenter;
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Case-o-Matic Matchmaking Center (v" + version + ")");
+            Console.WriteLine("Case-o-Matic Matchmaking Center (v" + MatchmakingCenter.version + ")");
+            Console.WriteLine("Write \"?\" for help");
+            Console.WriteLine();
 
             #region Port selection
             port:
@@ -67,7 +70,7 @@ namespace CaseomaticMatchmakingServer
                         GameServerMirror gameServerMirror = mmCenter.registeredGameServers.Find((g) => { if (g.endPoint.Address == IPAddress.Parse(commandArgs[0]) && g.endPoint.Port == int.Parse(commandArgs[1])) return true; else return false; });
                         mmCenter.UnregisterGameServer(gameServerMirror);
                     }
-                    else if (commandName == "print_addedgameservers")
+                    else if (commandName == "print_registeredgameservers")
                     {
                         Console.WriteLine();
                         Console.WriteLine("All added gameservers:");
@@ -99,6 +102,13 @@ namespace CaseomaticMatchmakingServer
                         }
                         else
                             Console.WriteLine("The needed user queue length must be between 1 and " + MatchmakingCenter.maxNeededUserQueueLength);
+                    }
+                    else if(commandName == "?")
+                    {
+                        if (File.Exists("commands.txt"))
+                            Process.Start("commands.txt");
+                        else
+                            Console.WriteLine("commands.txt not found!");
                     }
                     else
                         Console.WriteLine("The command \"" + commandFull + "\" is not valid");

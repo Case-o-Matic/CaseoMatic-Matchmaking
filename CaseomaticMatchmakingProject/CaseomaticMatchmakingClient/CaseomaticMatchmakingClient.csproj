@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="MatchmakingAnswer.cs" />
     <Compile Include="MatchmakingFoundInfo.cs" />
+    <Compile Include="MatchmakingLog.cs" />
     <Compile Include="MatchmakingManager.cs" />
     <Compile Include="MatchmakingPresence.cs" />
     <Compile Include="MatchmakingRequest.cs" />
